@@ -1,0 +1,21 @@
+# Arquivos de configuração
+node_modules/
+package-lock.json
+yarn.lock
+
+# Arquivos de build
+build/
+dist/
+out/
+*.log
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Outros arquivos
+.DS_Store
+Thumbs.db
