@@ -45,34 +45,33 @@ function waitForMessage(message) {
         collector.on("collect", (response) => {
             const matcher = response.content.match("^([a-zA-Z0-9]+\/)+[a-zA-Z0-9]+$");
 
-            if (matcher == null)
-            message.channel.send(
-                "Você ta de sacanagem? Eu FALEI O PADRÃO CERTINHO");;
+            if (matcher == null) {
+                message.channel.send(
+                    "Você ta de sacanagem? Eu FALEI O PADRÃO CERTINHO");
+                return;
+            }
 
             const names = matcher[0].split("/");
-            try {
 
-                if (names.length % 2 === 0) {
-                    const sortedNames = _.shuffle(names);
-                    const half = Math.ceil(sortedNames.length / 2);
+            if (names.length % 2 === 0) {
+                const sortedNames = _.shuffle(names);
+                const half = Math.ceil(sortedNames.length / 2);
 
-                    const teamOneList = sortedNames.slice(0, half);
-                    const teamTwoList = sortedNames.slice(half);
+                const teamOneList = sortedNames.slice(0, half);
+                const teamTwoList = sortedNames.slice(half);
 
-                    const teamOneNames = teamOneList.join(", ");
-                    const teamTwoNames = teamTwoList.join(", ");
-                    message.channel.send(`Time 1: ${teamOneNames}\nTime 2: ${teamTwoNames}`);
-                    message.channel.send(`Boa Gameplay, não se esqueçam das regras:\n\n1- Ofender todos\n2- Não se matar pra torre\n3- Ofender todos\n4- Acertou bolinha de neve......... VAI\n5- Ofender todos (Não se esqueça do seu próprio time)\n6- Não de dodge\n7- Divirta-se`);
-                    resolve(response.content);
-                } else {
-                    message.channel.send(
-                        "Infezlimente não quero fazer parte dessa crocodilagem de um time ficar -1, ainda mais se o Guijas tiver"
-                    );
-                }
-            } catch (err) {
-
-                reject("");
+                const teamOneNames = teamOneList.join(", ");
+                const teamTwoNames = teamTwoList.join(", ");
+                message.channel.send(`Time 1: ${teamOneNames}\nTime 2: ${teamTwoNames}`);
+                message.channel.send(`Boa Gameplay, não se esqueçam das regras:\n\n1- Ofender todos\n2- Não se matar pra torre\n3- Ofender todos\n4- Acertou bolinha de neve......... VAI\n5- Ofender todos (Não se esqueça do seu próprio time)\n6- Não de dodge\n7- Divirta-se`);
+                resolve(response.content);
+            } else {
+                message.channel.send(
+                    "Infezlimente não quero fazer parte dessa crocodilagem de um time ficar -1, ainda mais se o Guijas tiver"
+                );
+                return;
             }
+
             collector.stop();
         });
 
