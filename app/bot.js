@@ -39,13 +39,14 @@ client.login(process.env.DISCORD_BOT_TOKEN);
 
 function createTeam() {
     return new Promise((resolve, reject) => {
-        client.on('messageCreate', (messageStart) => {
+        client.on('message', (messageStart) => {
             let matcher = messageStart.content.match("^([a-zA-Z0-9]+\/)+[a-zA-Z0-9]+$")
             if (matcher == null)
                 return;
-
+            console.log('Entrou')
             const names = matcher[0].split('/'); // Separa os names em uma lista
             if (names.length % 2 === 0) {
+                console.log('Entrou MOD')
                 const sortedNames = _.shuffle(names); // Embaralha aleatoriamente os names
                 const half = Math.ceil(sortedNames.length / 2);
 
