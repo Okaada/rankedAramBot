@@ -28,7 +28,7 @@ client.on('message', async (message) => {
         message.reply("Quem serão os azarados que vão jogar com o Wesley ou Guijas? \nPasse os Nicks no seguinte padrão: Barbixinha/Lascaltinho/Patriquinho/...")
 
         try {
-            await createTeam();
+            await createTeam().then(x => x);
         } catch (error) {
             console.error(error);
         }
@@ -59,16 +59,16 @@ function createTeam() {
                 let teamTwoNames = teamTwoList.join(", ");
                 messageStart.channel.send(`Time 1: ${teamOneNames} \nTime 2: ${teamTwoNames}`)
                 messageStart.channel.send(`Boa Gameplay, não se esqueçam das regras: \n\n1- Ofender todos \n2- Não se matar pra torre\n3- Ofender todos\n4- Acertou bolinha de neve......... VAI\n5- Ofender todos (Não se esqueça do seu próprio time)\n6- Não de dodge \n7- Divirta-se`);
-                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
                 resolve();
+                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
             } else {
                 messageStart.channel.send(`Infezlimente não quero fazer parte dessa crocodilagem de um time ficar -1, ainda mais se o Guijas tiver `)
-                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
                 reject();
+                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
             }
         }
 
     });
 
-    client.off('message', messageHandler);
+    //client.off('message', messageHandler);
 }
