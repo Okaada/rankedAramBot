@@ -9,7 +9,7 @@ const client = new Discord.Client({
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES
     ]
-  });
+});
 
 client.on('ready', () => {
     console.log(`Bot ${client.user.tag} está pronto para ser usado!`);
@@ -27,9 +27,11 @@ client.on('message', async (message) => {
     if (command[1] == 'start') {
         message.reply("Quem serão os azarados que vão jogar com o Wesley ou Guijas? \nPasse os Nicks no seguinte padrão: Barbixinha/Lascaltinho/Patriquinho/...")
 
-        createTeam().then(x => {
-            message.channel.send(`Boa Gameplay, não se esqueçam das regras: \n\n1- Ofender todos \n2- Não se matar pra torre\n3- Ofender todos\n4- Acertou bolinha de neve......... VAI\n5- Ofender todos (Não se esqueça do seu próprio time)\n6- Não de dodge \n7- Divirta-se`);
-        }).catch()
+        try {
+            await createTeam();
+        } catch (error) {
+            console.error(error);
+        }
     }
     if (command[1] == 'regras')
         message.channel.send(`O Livro das regras ainda não ta 100% pronto, mas na moral não se mata pra torre bobão.`);
@@ -56,6 +58,8 @@ function createTeam() {
                 let teamOneNames = teamOneList.join(", ");
                 let teamTwoNames = teamTwoList.join(", ");
                 messageStart.channel.send(`Time 1: ${teamOneNames} \nTime 2: ${teamTwoNames}`)
+                messageStart.channel.send(`Boa Gameplay, não se esqueçam das regras: \n\n1- Ofender todos \n2- Não se matar pra torre\n3- Ofender todos\n4- Acertou bolinha de neve......... VAI\n5- Ofender todos (Não se esqueça do seu próprio time)\n6- Não de dodge \n7- Divirta-se`);
+
                 resolve();
             }
             else {
