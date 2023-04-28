@@ -28,7 +28,7 @@ client.on('message', async (message) => {
         message.reply("Quem serão os azarados que vão jogar com o Wesley ou Guijas? \nPasse os Nicks no seguinte padrão: Barbixinha/Lascaltinho/Patriquinho/...")
 
 
-        await waitForMessage()
+        await waitForMessage(message)
     }
     if (command[1] == 'regras')
         message.channel.send(`O Livro das regras ainda não ta 100% pronto, mas na moral não se mata pra torre bobão.`);
