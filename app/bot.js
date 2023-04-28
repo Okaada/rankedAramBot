@@ -26,8 +26,6 @@ client.on('message', async (message) => {
 
     if (command[1] == 'start') {
         message.reply("Quem serão os azarados que vão jogar com o Wesley ou Guijas? \nPasse os Nicks no seguinte padrão: Barbixinha/Lascaltinho/Patriquinho/...")
-
-
         await waitForMessage(message)
     }
     if (command[1] == 'regras')
@@ -36,77 +34,52 @@ client.on('message', async (message) => {
 
 client.login(process.env.DISCORD_BOT_TOKEN);
 
-function createTeam() {
-    return new Promise((resolve, reject) => {
-        const messageHandler = (messageStart) => {
-            let matcher = messageStart.content.match("^([a-zA-Z0-9]+\/)+[a-zA-Z0-9]+$")
-            if (matcher == null)
-                return;
-            console.log('Entrou')
-            const names = matcher[0].split('/'); // Separa os names em uma lista
-            if (names.length % 2 === 0) {
-                console.log('Entrou MOD')
-                const sortedNames = _.shuffle(names); // Embaralha aleatoriamente os names
-                const half = Math.ceil(sortedNames.length / 2);
-
-                const teamOneList = sortedNames.slice(0, half);
-                const teamTwoList = sortedNames.slice(half);
-
-                let teamOneNames = teamOneList.join(", ");
-                let teamTwoNames = teamTwoList.join(", ");
-                messageStart.channel.send(`Time 1: ${teamOneNames} \nTime 2: ${teamTwoNames}`)
-                messageStart.channel.send(`Boa Gameplay, não se esqueçam das regras: \n\n1- Ofender todos \n2- Não se matar pra torre\n3- Ofender todos\n4- Acertou bolinha de neve......... VAI\n5- Ofender todos (Não se esqueça do seu próprio time)\n6- Não de dodge \n7- Divirta-se`);
-                resolve();
-                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
-            } else {
-                messageStart.channel.send(`Infezlimente não quero fazer parte dessa crocodilagem de um time ficar -1, ainda mais se o Guijas tiver `)
-                reject();
-                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
-            }
-        }
-
-    });
-
-    //client.off('message', messageHandler);
-}
-
 function waitForMessage(message) {
     return new Promise((resolve, reject) => {
         const filter = (response) => response.author.id === message.author.id;
-        const collector = message.channel.createMessageCollector(filter, { time: 30000 }); // 30 segundos de timeout
-        collector.on('collect', (response) => {
-            let matcher = messageStart.content.match("^([a-zA-Z0-9]+\/)+[a-zA-Z0-9]+$")
-            if (matcher == null)
-                return;
-            console.log('Entrou')
-            const names = matcher[0].split('/'); // Separa os names em uma lista
-            if (names.length % 2 === 0) {
-                console.log('Entrou MOD')
-                const sortedNames = _.shuffle(names); // Embaralha aleatoriamente os names
-                const half = Math.ceil(sortedNames.length / 2);
-
-                const teamOneList = sortedNames.slice(0, half);
-                const teamTwoList = sortedNames.slice(half);
-
-                let teamOneNames = teamOneList.join(", ");
-                let teamTwoNames = teamTwoList.join(", ");
-                messageStart.channel.send(`Time 1: ${teamOneNames} \nTime 2: ${teamTwoNames}`)
-                messageStart.channel.send(`Boa Gameplay, não se esqueçam das regras: \n\n1- Ofender todos \n2- Não se matar pra torre\n3- Ofender todos\n4- Acertou bolinha de neve......... VAI\n5- Ofender todos (Não se esqueça do seu próprio time)\n6- Não de dodge \n7- Divirta-se`);
-                resolve();
-                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
-            } else {
-                messageStart.channel.send(`Infezlimente não quero fazer parte dessa crocodilagem de um time ficar -1, ainda mais se o Guijas tiver `)
-                reject();
-                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
-            }
-            collector.stop();
-            resolve(response);
+        const collector = message.channel.createMessageCollector(filter, {
+            time: 30000,
+            max: 1,
         });
 
-        collector.on('end', (collected, reason) => {
-            if (reason === 'time') {
-                message.channel.send('Tempo esgotado.');
-                reject('timeout');
+        collector.on("collect", (response) => {
+            const matcher = response.content.match("^([a-zA-Z0-9]+\/)+[a-zA-Z0-9]+$");
+
+            if (matcher == null)
+            message.channel.send(
+                "Você ta de sacanagem? Eu FALEI O PADRÃO CERTINHO");;
+
+            const names = matcher[0].split("/");
+            try {
+
+                if (names.length % 2 === 0) {
+                    const sortedNames = _.shuffle(names);
+                    const half = Math.ceil(sortedNames.length / 2);
+
+                    const teamOneList = sortedNames.slice(0, half);
+                    const teamTwoList = sortedNames.slice(half);
+
+                    const teamOneNames = teamOneList.join(", ");
+                    const teamTwoNames = teamTwoList.join(", ");
+                    message.channel.send(`Time 1: ${teamOneNames}\nTime 2: ${teamTwoNames}`);
+                    message.channel.send(`Boa Gameplay, não se esqueçam das regras:\n\n1- Ofender todos\n2- Não se matar pra torre\n3- Ofender todos\n4- Acertou bolinha de neve......... VAI\n5- Ofender todos (Não se esqueça do seu próprio time)\n6- Não de dodge\n7- Divirta-se`);
+                    resolve(response.content);
+                } else {
+                    message.channel.send(
+                        "Infezlimente não quero fazer parte dessa crocodilagem de um time ficar -1, ainda mais se o Guijas tiver"
+                    );
+                }
+            } catch (err) {
+
+                reject("");
+            }
+            collector.stop();
+        });
+
+        collector.on("end", (collected, reason) => {
+            if (reason === "time") {
+                message.channel.send("Tempo esgotado.");
+                resolve("timeout");
             }
         });
     });
