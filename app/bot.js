@@ -41,31 +41,34 @@ client.login(process.env.DISCORD_BOT_TOKEN);
 
 function createTeam() {
     return new Promise((resolve, reject) => {
-      const messageHandler = (messageStart) => {
-        let matcher = messageStart.content.match("^([a-zA-Z0-9]+\/)+[a-zA-Z0-9]+$")
-        if (matcher == null)
-          return;
-        console.log('Entrou')
-        const names = matcher[0].split('/'); // Separa os names em uma lista
-        if (names.length % 2 === 0) {
-          console.log('Entrou MOD')
-          const sortedNames = _.shuffle(names); // Embaralha aleatoriamente os names
-          const half = Math.ceil(sortedNames.length / 2);
-  
-          const teamOneList = sortedNames.slice(0, half);
-          const teamTwoList = sortedNames.slice(half);
-  
-          let teamOneNames = teamOneList.join(", ");
-          let teamTwoNames = teamTwoList.join(", ");
-          messageStart.channel.send(`Time 1: ${teamOneNames} \nTime 2: ${teamTwoNames}`)
-          resolve();
-        } else {
-          messageStart.channel.send(`Infezlimente não quero fazer parte dessa crocodilagem de um time ficar -1, ainda mais se o Guijas tiver `)
-          reject()
+        const messageHandler = (messageStart) => {
+            let matcher = messageStart.content.match("^([a-zA-Z0-9]+\/)+[a-zA-Z0-9]+$")
+            if (matcher == null)
+                return;
+            console.log('Entrou')
+            const names = matcher[0].split('/'); // Separa os names em uma lista
+            if (names.length % 2 === 0) {
+                console.log('Entrou MOD')
+                const sortedNames = _.shuffle(names); // Embaralha aleatoriamente os names
+                const half = Math.ceil(sortedNames.length / 2);
+
+                const teamOneList = sortedNames.slice(0, half);
+                const teamTwoList = sortedNames.slice(half);
+
+                let teamOneNames = teamOneList.join(", ");
+                let teamTwoNames = teamTwoList.join(", ");
+                messageStart.channel.send(`Time 1: ${teamOneNames} \nTime 2: ${teamTwoNames}`)
+                messageStart.channel.send(`Boa Gameplay, não se esqueçam das regras: \n\n1- Ofender todos \n2- Não se matar pra torre\n3- Ofender todos\n4- Acertou bolinha de neve......... VAI\n5- Ofender todos (Não se esqueça do seu próprio time)\n6- Não de dodge \n7- Divirta-se`);
+                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
+                resolve();
+            } else {
+                messageStart.channel.send(`Infezlimente não quero fazer parte dessa crocodilagem de um time ficar -1, ainda mais se o Guijas tiver `)
+                client.off('message', messageHandler); // Remove o manipulador de eventos anterior
+                reject();
+            }
         }
-      }
-  
-      client.off('message', messageHandler); // Remove o manipulador de eventos anterior, se existir
-      client.on('message', messageHandler); // Adiciona o novo manipulador de eventos
+
     });
-  }
+
+    client.off('message', messageHandler);
+}
